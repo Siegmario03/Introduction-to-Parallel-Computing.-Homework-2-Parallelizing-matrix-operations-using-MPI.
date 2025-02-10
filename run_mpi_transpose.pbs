@@ -1,0 +1,18 @@
+#!/bin/bash
+#PBS -N mpi_transpose
+#PBS -l nodes=4:ppn=8
+#PBS -l walltime=01:00:00
+#PBS -j oe
+#PBS -o /c:/Users/Zeno/Desktop/parco_2/output.log
+
+cd $PBS_O_WORKDIR
+
+module load gcc/9.1.0
+module load mpich/3.2.1--gcc-9.1.0
+
+mpic++ -o main main.cpp all_toall.cpp scatter_gather.cpp pipelined.cpp sequential.cpp block_transpose.cpp
+
+for np in 1 2 4 8 16
+do
+    mpirun -np $np ./main
+done
